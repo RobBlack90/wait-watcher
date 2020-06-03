@@ -1,0 +1,22 @@
+{
+  "name": "wait-watcher",
+  "version": "1.0.0",
+  "description": "A tool to alert me if any sort of weight equipment is ever in stock again. ...pls be in stock. pls.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "autostart": "nodemon --ignore 'storage/*'"
+  },
+  "author": "Robby Black",
+  "license": "ISC",
+  "dependencies": {
+    "@hapi/hapi": "^19.1.1",
+    "axios": "^0.19.2",
+    "cheerio": "^1.0.0-rc.3",
+    "dotenv": "^8.2.0",
+    "lodash": "^4.17.15",
+    "lowdb": "^1.0.0",
+    "node-cron": "^2.0.3",
+    "nodemailer": "^6.4.8"
+  }
+}
