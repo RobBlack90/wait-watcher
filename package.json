@@ -10,10 +10,12 @@
   "author": "Robby Black",
   "license": "ISC",
   "dependencies": {
+    "@hapi/boom": "^9.1.0",
     "@hapi/hapi": "^19.1.1",
     "axios": "^0.19.2",
     "cheerio": "^1.0.0-rc.3",
     "dotenv": "^8.2.0",
+    "klona": "^1.1.1",
     "lodash": "^4.17.15",
     "lowdb": "^1.0.0",
     "node-cron": "^2.0.3",
