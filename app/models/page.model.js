@@ -16,11 +16,11 @@ const PageSchema = new Schema({
     texts: [PageItemSchema],
     content: { type: Object },
     changes: { type: Object },
-    lastUpdated: { type: Date, default: Date.now }
+    lastScraped: { type: Date, default: Date.now }
 }, {collection: 'page'})
 
 PageSchema.pre('save', function preSave(next) {
-    this.lastUpdated = Date.now() 
+    this.lastScraped = Date.now() 
     next()
 })
 

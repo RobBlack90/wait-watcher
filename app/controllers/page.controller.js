@@ -24,6 +24,11 @@ module.exports = {
         return page
     },
     async update(request) {
+        const { payload } = request
+        delete payload.content
+        delete payload.changes
+        delete payload.lastScraped
+        
         return await Page.findByIdAndUpdate(request.params.id, request.payload, { new: true }) || Boom.notFound()
     },
     async remove(request) {
