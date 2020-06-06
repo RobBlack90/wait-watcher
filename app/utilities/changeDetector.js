@@ -39,7 +39,7 @@ async function detect() {
                     latest.changes = getChanges(latest.content, page.content)
                 }
                 
-                latest = await Page.findByIdAndUpdate(page.id, latest, { new : true})
+                latest = await Page.findByIdAndUpdate(page._id, latest, { new : true})
 
                 console.log(`[${latest.lastScraped}]Task ${page.name} ran successfully.`)
             } else {

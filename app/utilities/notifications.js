@@ -34,7 +34,7 @@ async function sendNotifications() {
                 }
 
                 const passed = (criteria.andOr === 'OR') ? acceptanceArray.some(v => v) : acceptanceArray.every(v => v)
-                if (passed) correctPages.push(page.id)
+                if (passed) correctPages.push(page._id)
             }
         }  
 
@@ -45,7 +45,7 @@ async function sendNotifications() {
             if (alert.phoneNumber) sendText(alert)
         }
         
-        latest = await Alert.findByIdAndUpdate(alert.id, alert)
+        latest = await Alert.findByIdAndUpdate(alert._id, alert)
     }
 }
 
@@ -54,11 +54,11 @@ function sendEmail(alert, pages) {
     let contentStr = ''
 
     alert.correctPages.forEach(page => {
-        contentStr += `${page.name}: ${page.id} \n`
+        contentStr += `${page.name}: ${page._id} \n`
     })
 
     let transporter = nodemailer.createTransport({
-        service: 'gmail',
+        service: process.env.EMAILSERVICE,
         auth: {
             user: process.env.EMAIL,
             pass: process.env.PASSWORD
