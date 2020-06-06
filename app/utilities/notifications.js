@@ -1,6 +1,6 @@
 
 const nodemailer = require('nodemailer')
-const db = require('./db')
+const Alert = require('../models/alert.model')
 const _ = require('lodash')
 
 
@@ -14,18 +14,16 @@ const conditionChecker = {
 
 
 async function sendNotifications() {
-    const alerts = db.get('alerts').value()
+    const alerts = await Alert.find().populate('pageCriteria.page').populate('correctPages')
 
     for (const alert of alerts) {
         const correctPages = []
 
         for (const criteria of alert.pageCriteria) {
-            const page = db.get('pages')
-            .find({ id: criteria.pageId })
-            .value()
+            const page = criteria.page
 
-            if (!criteria.content) {
-                if (page.changes) correctPages.push(page.id)
+            if (_.isEmpty(criteria.content)) {
+                if (page.changes) correctPages.push(page)
             } else {
                 const acceptanceArray = []
 
@@ -43,18 +41,11 @@ async function sendNotifications() {
         alert.correctPages = correctPages
 
         if (alert.pageCriteria.length === correctPages.length) {
-            const pages = db.get('pages')
-            .filter(page => alert.correctPages.includes(page.id))
-            .value()
-
-            if (alert.emailAddress) sendEmail(alert, pages)
-            if (alert.phoneNumber) sendText(alert, pages)
+            if (alert.emailAddress) sendEmail(alert)
+            if (alert.phoneNumber) sendText(alert)
         }
         
-        db.get('alerts')
-        .find({name: alert.name})
-        .assign(alert)
-        .write()
+        latest = await Alert.findByIdAndUpdate(alert.id, alert)
     }
 }
 
@@ -62,7 +53,7 @@ async function sendNotifications() {
 function sendEmail(alert, pages) {
     let contentStr = ''
 
-    pages.forEach(page => {
+    alert.correctPages.forEach(page => {
         contentStr += `${page.name}: ${page.id} \n`
     })
 
@@ -89,7 +80,7 @@ function sendEmail(alert, pages) {
     })
 }
 
-function sendText(alert, pages) {
+function sendText(alert) {
     console.log(`Here's where I'd send a text to ${alert.phoneNumber}`)
 }
 

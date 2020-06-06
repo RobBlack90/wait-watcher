@@ -20,6 +20,7 @@ const init = async () => {
     mongoose.connect(mongoDbUri, {
         useNewUrlParser: true, 
         useUnifiedTopology: true,
+        useFindAndModify: false
     })
 
     mongoose.connection.on('connected', () => {
@@ -43,7 +44,7 @@ const init = async () => {
     await server.start()
     console.log('Server running on %s', server.info.uri)
 
-    // await detectChanges()
+    await detectChanges()
 }
 
 process.on('unhandledRejection', (err) => {
