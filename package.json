@@ -4,6 +4,7 @@
   "description": "A tool to alert me if any sort of weight equipment is ever in stock again. ...pls be in stock. pls.",
   "main": "index.js",
   "scripts": {
+    "start": "node index",
     "test": "echo \"Error: no test specified\" && exit 1",
     "autostart": "nodemon --ignore 'storage/*'",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install"
