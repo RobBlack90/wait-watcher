@@ -14,10 +14,9 @@ const Hapi = require('@hapi/hapi')
 
 const init = async () => {
     
-    const mongoDbUri = process.env.POINT_TO === 'PROD' ? process.env.DB_URI : 'mongodb://localhost:27017/waitWatcher'
+    const mongoDbUri = process.env.NODE_ENV === 'production' ? process.env.DB_URI : 'mongodb://localhost:27017/waitWatcher'
     const server = Hapi.server({
-        port: 3000,
-        host: 'localhost'
+        port: process.env.PORT || 3000    
     })
 
     mongoose.connect(mongoDbUri, {
