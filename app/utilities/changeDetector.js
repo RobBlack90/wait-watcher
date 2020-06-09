@@ -4,9 +4,6 @@ const Page = require('../models/page.model')
 const sendNotifications = require('./notifications')
 const _ = require('lodash')
 
-require('dotenv').config()
-
-
 async function detect() {
     const pages = await Page.find()
     for (const page of pages) {

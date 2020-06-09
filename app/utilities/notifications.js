@@ -8,8 +8,8 @@ const _ = require('lodash')
 const conditionChecker = {
     "equals" : function (currentValue, desiredValue) { return desiredValue === currentValue},
     "includes" : function (wholeValue, includesValue) { return wholeValue.includes(includesValue)},
-    "greaterThan" : function (current, limit) { return Number(current) > Number(limit)},
-    "greaterThan" : function (current, limit) { return Number(limit) > Number(current)},
+    "greater than" : function (current, limit) { return Number(current) > Number(limit)},
+    "less than" : function (current, limit) { return Number(limit) < Number(current)},
 }
 
 
@@ -45,20 +45,20 @@ async function sendNotifications() {
             if (alert.phoneNumber) sendText(alert)
         }
         
-        latest = await Alert.findByIdAndUpdate(alert._id, alert)
+        await Alert.findByIdAndUpdate(alert._id, alert)
     }
 }
 
 
-function sendEmail(alert, pages) {
+function sendEmail(alert) {
     let contentStr = ''
 
     alert.correctPages.forEach(page => {
-        contentStr += `${page.name}: ${page._id} \n`
+        contentStr += `${page.name}: ${page.url} \n`
     })
 
     let transporter = nodemailer.createTransport({
-        service: process.env.EMAILSERVICE,
+        service: process.env.EMAIL_SERVICE,
         auth: {
             user: process.env.EMAIL,
             pass: process.env.PASSWORD
