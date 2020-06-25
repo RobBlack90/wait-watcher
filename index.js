@@ -3,7 +3,7 @@
 const mongoose = require('mongoose')
 const alertRoutes = require('./app/routes/alerts.routes')
 const pageRoutes = require('./app/routes/pages.routes')
-const detectChanges = require('./app/utilities/changeDetector')
+const changeDetector = require('./app/utilities/changeDetector')
 require('dotenv').config()
 require('./app/utilities/cron')
 
@@ -44,7 +44,7 @@ const init = async () => {
     await server.start()
     console.log('Server running on %s', server.info.uri)
 
-    await detectChanges()
+    await changeDetector.detectChanges()
 }
 
 process.on('unhandledRejection', (err) => {

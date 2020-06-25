@@ -1,4 +1,5 @@
 const Page = require('../models/page.model')
+const changeDetector = require('../utilities/changeDetector')
 const Boom = require('@hapi/boom')
 
 
@@ -11,7 +12,7 @@ module.exports = {
             return Boom.badRequest('There was an error creating the page.')
         }
 
-        return newPage
+        return await changeDetector.detectChange(newPage)
     },
     async find(request) {
         const pages = await Page.find(request.query)
@@ -28,8 +29,14 @@ module.exports = {
         delete payload.content
         delete payload.changes
         delete payload.lastScraped
-        
-        return await Page.findByIdAndUpdate(request.params.id, request.payload, { new: true }) || Boom.notFound()
+
+        try {
+            const updatedPage = await Page.findByIdAndUpdate(request.params.id, payload, { new: true }) 
+            return await changeDetector.detectChange(updatedPage)
+        } catch (e) {
+            console.log(e)
+            return Boom.badRequest(`There was an error upating page ${request.params.id}`, e)
+        }
     },
     async remove(request) {
         return await Page.findByIdAndRemove(request.params.id) || Boom.notFound()
