@@ -16,7 +16,7 @@ const PageCriteriaSchema = new Schema({
 
 const AlertSchema = new Schema({
     name: { required: true, type: String },
-    emailAddress: { type: Object },
+    emailAddress: { type: Object, required: true },
     phoneNumber: { type: Object },
     pageCriteria: [ PageCriteriaSchema ],
     correctPages: [{ type: Schema.Types.ObjectId, ref: 'Page' }]

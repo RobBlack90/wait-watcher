@@ -15,12 +15,7 @@ const PageSchema = new Schema({
     texts: [PageItemSchema],
     content: { type: Object },
     changes: { type: Object },
-    lastScraped: { type: Date, default: Date.now }
-}, {collection: 'page'})
-
-PageSchema.pre('save', function preSave(next) {
-    this.lastScraped = Date.now() 
-    next()
+    lastScraped: { type: Date }
 })
 
 module.exports = mongoose.model('Page', PageSchema)

@@ -2,7 +2,7 @@
 const nodemailer = require('nodemailer')
 const Alert = require('../models/alert.model')
 const _ = require('lodash')
-
+const Nexmo = require('nexmo')
 
 
 const conditionChecker = {
@@ -34,7 +34,7 @@ async function sendNotifications() {
                 }
 
                 const passed = (criteria.andOr === 'OR') ? acceptanceArray.some(v => v) : acceptanceArray.every(v => v)
-                if (passed) correctPages.push(page._id)
+                if (passed) correctPages.push(page)
             }
         }  
 
@@ -54,7 +54,7 @@ function sendEmail(alert) {
     let contentStr = ''
 
     alert.correctPages.forEach(page => {
-        contentStr += `${page.name}: ${page.url} \n`
+        contentStr += `\n ${page.name}: ${page.url} \n`
     })
 
     let transporter = nodemailer.createTransport({
@@ -81,7 +81,19 @@ function sendEmail(alert) {
 }
 
 function sendText(alert) {
-    console.log(`Here's where I'd send a text to ${alert.phoneNumber}`)
+    console.log(`Sending a text to ${alert.phoneNumber} for ${alert.name}...`)
+
+    if (process.env.NODE_ENV === 'production') { //texts aren't free, ya know.
+        const nexmo = new Nexmo({
+            apiKey: process.env.NEXMO_KEY,
+            apiSecret: process.env.NEXMO_SECRET
+        })
+
+        const text = `All the criteria for "${alert.name}" has been met! Check your email for the full report.`
+
+        console.log(`Sending a text to ${alert.phoneNumber} for ${alert.name}...`)
+        nexmo.message.sendSms(process.env.NEXMO_NUMBER, alert.phoneNumber, text)
+    }
 }
 
 

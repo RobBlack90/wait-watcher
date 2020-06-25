@@ -21,6 +21,7 @@
     "lodash": "^4.17.15",
     "lowdb": "^1.0.0",
     "mongoose": "^5.9.18",
+    "nexmo": "^2.6.0",
     "node-cron": "^2.0.3",
     "nodemailer": "^6.4.8"
   }
