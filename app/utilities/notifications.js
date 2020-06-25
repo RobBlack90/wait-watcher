@@ -55,6 +55,9 @@ function sendEmail(alert) {
 
     alert.correctPages.forEach(page => {
         contentStr += `\n ${page.name}: ${page.url} \n`
+        for (const contentName in page.content) {
+            contentStr += `${contentName}: ${page.content[contentName]} \n`
+        }
     })
 
     let transporter = nodemailer.createTransport({
