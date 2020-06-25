@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 const alertRoutes = require('./app/routes/alerts.routes')
 const pageRoutes = require('./app/routes/pages.routes')
 const changeDetector = require('./app/utilities/changeDetector')
-require('dotenv').config()
+require('dotenv').config({ path: `${__dirname}/.env` })
 require('./app/utilities/cron')
 
 
