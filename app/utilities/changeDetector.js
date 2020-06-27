@@ -31,7 +31,7 @@ async function detectChange(page) {
 
             if (page.elements) {
                 page.elements.forEach(element => {
-                    latestContent[element.name] = $(element.identifier).html() ? true : false
+                    latestContent[element.name] = $(element.identifier).length
                 })
             }
 
