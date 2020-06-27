@@ -15,15 +15,17 @@ const conditionChecker = {
 
 async function sendNotifications() {
     const alerts = await Alert.find().populate('pageCriteria.page').populate('correctPages')
+    console.log('Checking alerts...')
 
     for (const alert of alerts) {
         const correctPages = []
 
         for (const criteria of alert.pageCriteria) {
             const page = criteria.page
+            let pageCriteriaMet = false
 
             if (_.isEmpty(criteria.content)) {
-                if (page.changes) correctPages.push(page)
+                if (page.changes) pageCriteriaMet = true
             } else {
                 const acceptanceArray = []
 
@@ -34,7 +36,12 @@ async function sendNotifications() {
                 }
 
                 const passed = (criteria.andOr === 'OR') ? acceptanceArray.some(v => v) : acceptanceArray.every(v => v)
-                if (passed) correctPages.push(page)
+                if (passed) pageCriteriaMet = true
+            }
+
+            if (pageCriteriaMet) {
+                correctPages.push(page)
+                criteria.criteriaLastMet = new Date()
             }
         }  
 

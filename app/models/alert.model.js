@@ -11,6 +11,7 @@ const ContentSchema = new Schema({
 const PageCriteriaSchema = new Schema({
     page: { type: Schema.Types.ObjectId, ref: 'Page' },
     andOr: { type: String },
+    criteriaLastMet: { type: Date },
     content: [ ContentSchema ]
 })
 
