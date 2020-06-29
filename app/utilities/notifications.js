@@ -19,6 +19,11 @@ async function sendNotifications() {
 
     for (const alert of alerts) {
         const correctPages = []
+        const changesExist = alert.pageCriteria.filter(criteria => _.get(criteria,'page.changes')).length ? true : false
+
+        if (!changesExist) {
+            continue
+        }
 
         for (const criteria of alert.pageCriteria) {
             const page = criteria.page
