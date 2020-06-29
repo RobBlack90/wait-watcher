@@ -42,6 +42,7 @@ async function detectChange(page) {
 
             if (page.content) {
                 latest.changes = getChanges(latest.content, page.content)
+                latest.lastChanged = latest.changes ? latest.lastScraped : page.lastChanged
             }
             
             latest = await Page.findByIdAndUpdate(page._id, latest, { new : true})

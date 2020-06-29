@@ -15,7 +15,8 @@ const PageSchema = new Schema({
     texts: [PageItemSchema],
     content: { type: Object },
     changes: { type: Object },
-    lastScraped: { type: Date }
+    lastScraped: { type: Date },
+    lastChanged: { type: Date }
 })
 
 module.exports = mongoose.model('Page', PageSchema)
