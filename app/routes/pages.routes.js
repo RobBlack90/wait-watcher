@@ -29,4 +29,4 @@ module.exports = [
         method: 'PUT',
         handler: controller.update
     }
-];
+]

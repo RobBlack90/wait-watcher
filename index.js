@@ -3,6 +3,7 @@
 const mongoose = require('mongoose')
 const alertRoutes = require('./app/routes/alerts.routes')
 const pageRoutes = require('./app/routes/pages.routes')
+const pageScrapeRoutes = require('./app/routes/pageScrapes.routes')
 const changeDetector = require('./app/utilities/changeDetector')
 require('dotenv').config({ path: `${__dirname}/.env` })
 require('./app/utilities/cron')
@@ -40,6 +41,7 @@ const init = async () => {
 
     server.route(alertRoutes)
     server.route(pageRoutes)
+    server.route(pageScrapeRoutes)
 
     await server.start()
     console.log('Server running on %s', server.info.uri)
