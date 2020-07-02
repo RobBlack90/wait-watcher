@@ -4,7 +4,7 @@ Turns out, trying to buy fitness equipment during a pandemic is like trying to f
 
 Fitness companies are doing their best to keep equipment in stock, but supply is snatched up in minutes. Also, as I've found out, shipping thousands of pounds ain't cheap. So being able to order as many items at once is vital in preventing me from weeping about shipping costs.
 
-This all led to the Wait Watcher! The app that'll check any webpage every 5mins and alert you (via email or SMS) when a custom set of criteria is met.
+Thus Wait Watcher was born! The app that'll check any webpage every 5mins and alert you via email or SMS when a custom set of criteria is met.
 
 ## To Install
 
@@ -26,8 +26,8 @@ NOTE: Adding `NODE_ENV=production` to your start script will use the production 
     - Provide a name and URL.
     - You'll also need some text/elements to check against.
         - Provide a name, and an class/element/id identifier (for more info, check [cheerio.js](https://cheerio.js.org/) ).
-        - Texts will take the actual string at the selected identifier.
-        - Elements will count the number of elements returned from the given identifier. 
+            - Texts will take the actual string at the selected identifier.
+            - Elements will count the number of elements returned from the given identifier. 
 ```
 {
 	"url":  "https://www.ironmaster.com/products/quick-lock-adjustable-dumbbells-75/",

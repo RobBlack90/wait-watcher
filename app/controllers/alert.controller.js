@@ -14,7 +14,21 @@ module.exports = {
         return newAlert
     },
     async find(request) {
-        const alerts = await Alert.find(request.query)
+        const querySelect = {}
+        const queryOptions = {}
+
+        if (request.query.select) {
+            const selectKeys = request.query.select.split(',')
+            selectKeys.forEach(key => {
+              querySelect[key] = 1
+            })
+        }
+
+        if (request.query.populate) {
+            queryOptions.populate = request.query.populate.split(',')
+        }
+
+        const alerts = await Alert.find({}, querySelect, queryOptions)
         return alerts
     },
     async show(request) {

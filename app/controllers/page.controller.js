@@ -15,7 +15,16 @@ module.exports = {
         return await changeDetector.detectChange(newPage)
     },
     async find(request) {
-        const pages = await Page.find(request.query)
+        const querySelect = {}
+
+        if (request.query.select) {
+            const selectKeys = request.query.select.split(',')
+            selectKeys.forEach(key => {
+              querySelect[key] = 1
+            })
+        }
+
+        const pages = await Page.find({}, querySelect).exec()
         return pages
     },
     async show(request) {
