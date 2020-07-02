@@ -8,6 +8,7 @@ const Nexmo = require('nexmo')
 const conditionChecker = {
     "equals" : function (currentValue, desiredValue) { return desiredValue === currentValue},
     "includes" : function (wholeValue, includesValue) { return wholeValue.includes(includesValue)},
+    "doesn't include" : function (wholeValue, includesValue) { return !wholeValue.includes(includesValue)},
     "greater than" : function (current, limit) { return Number(current) > Number(limit)},
     "less than" : function (current, limit) { return Number(limit) < Number(current)},
 }
