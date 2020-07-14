@@ -15,7 +15,7 @@ module.exports = {
     },
     async find(request) {
         const querySelect = {}
-        const queryOptions = {sort: {}}
+        const queryOptions = {}
 
         if (request.query.select) {
             const selectKeys = request.query.select.split(',')
@@ -24,17 +24,9 @@ module.exports = {
             })
         }
 
-        if (request.query.populate) {
-            queryOptions.populate = request.query.populate.split(',')
-        }
+        if (request.query.populate) queryOptions.populate = request.query.populate.split(',')
 
-        if (request.query.sortBy) {
-            const direction = request.query.sort === 'desc' ? -1 : 1
-            const sortKeys = request.query.sortBy.split(',')
-            sortKeys.forEach(key => {
-                queryOptions.sort[key] = direction
-            })
-        }
+        if (request.query.sortBy) queryOptions.sort = request.query.sortBy
 
         const alerts = await Alert.find({}, querySelect, queryOptions)
         return alerts
