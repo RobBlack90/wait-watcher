@@ -20,7 +20,8 @@ const AlertSchema = new Schema({
     emailAddress: { type: Object, required: true },
     phoneNumber: { type: Object },
     pageCriteria: [ PageCriteriaSchema ],
-    correctPages: [{ type: Schema.Types.ObjectId, ref: 'Page' }]
+    correctPages: [{ type: Schema.Types.ObjectId, ref: 'Page' }],
+    lastAlerted: { type: Date }
 })
 
 module.exports = mongoose.model('Alert', AlertSchema)

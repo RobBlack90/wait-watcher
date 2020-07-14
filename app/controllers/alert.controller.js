@@ -15,7 +15,7 @@ module.exports = {
     },
     async find(request) {
         const querySelect = {}
-        const queryOptions = {}
+        const queryOptions = {sort: {}}
 
         if (request.query.select) {
             const selectKeys = request.query.select.split(',')
@@ -26,6 +26,14 @@ module.exports = {
 
         if (request.query.populate) {
             queryOptions.populate = request.query.populate.split(',')
+        }
+
+        if (request.query.sortBy) {
+            const direction = request.query.sort === 'desc' ? -1 : 1
+            const sortKeys = request.query.sortBy.split(',')
+            sortKeys.forEach(key => {
+                queryOptions.sort[key] = direction
+            })
         }
 
         const alerts = await Alert.find({}, querySelect, queryOptions)

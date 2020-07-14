@@ -16,6 +16,7 @@ module.exports = {
     },
     async find(request) {
         const querySelect = {}
+        const queryOptions = { sort: {lastChanged : -1}}
 
         if (request.query.select) {
             const selectKeys = request.query.select.split(',')
@@ -24,7 +25,15 @@ module.exports = {
             })
         }
 
-        const pages = await Page.find({}, querySelect).exec()
+        if (request.query.sortBy) {
+            const direction = request.query.sort === 'desc' ? -1 : 1
+            const sortKeys = request.query.sortBy.split(',')
+            sortKeys.forEach(key => {
+                queryOptions.sort[key] = direction
+            })
+        }
+
+        const pages = await Page.find({}, querySelect, queryOptions).exec()
         return pages
     },
     async show(request) {

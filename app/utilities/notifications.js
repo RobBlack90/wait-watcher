@@ -56,6 +56,7 @@ async function sendNotifications() {
         if (alert.pageCriteria.length === correctPages.length) {
             if (alert.emailAddress) sendEmail(alert)
             if (alert.phoneNumber) sendText(alert)
+            alert.lastAlerted = new Date()
         }
         
         await Alert.findByIdAndUpdate(alert._id, alert)
