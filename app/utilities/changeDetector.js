@@ -1,5 +1,5 @@
 const Page = require('../models/page.model')
-const sendNotifications = require('./notifications')
+const notifications = require('./notifications')
 const PageScraper = require('./pageScraper')
 const _ = require('lodash')
 
@@ -10,7 +10,7 @@ async function detectChanges() {
         await detectChange(page)
     }
 
-    await sendNotifications()
+    await notifications.checkAlerts()
 }
 
 async function detectChange(page) {

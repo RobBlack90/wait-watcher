@@ -1,4 +1,5 @@
 const Alert = require('../models/alert.model')
+const notifications = require('../utilities/notifications')
 const Boom = require('@hapi/boom')
 
 
@@ -11,7 +12,7 @@ module.exports = {
             return Boom.badRequest('There was an error creating the alert.')
         }
 
-        return newAlert
+        return await notifications.checkAlert(newAlert)
     },
     async find(request) {
         const querySelect = {}
@@ -38,7 +39,8 @@ module.exports = {
         return alert
     },
     async update(request) {
-        return await Alert.findByIdAndUpdate(request.params.id, request.payload, { new: true }) || Boom.notFound()
+        const updatedAlert = await Alert.findByIdAndUpdate(request.params.id, request.payload, { new: true }) || Boom.notFound()
+        return await notifications.checkAlert(updatedAlert) 
     },
     async remove(request) {
         return await Alert.findByIdAndRemove(request.params.id) || Boom.notFound()

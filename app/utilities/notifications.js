@@ -13,56 +13,71 @@ const conditionChecker = {
     "less than" : function (current, limit) { return Number(limit) < Number(current)},
 }
 
+async function checkAlerts(sendAlertNotifications = true) {
 
-async function sendNotifications() {
     const alerts = await Alert.find().populate('pageCriteria.page').populate('correctPages')
     console.log('Checking alerts...')
 
     for (const alert of alerts) {
-        const correctPages = []
-        const changesExist = alert.pageCriteria.filter(criteria => _.get(criteria,'page.changes')).length ? true : false
-
-        if (!changesExist) {
-            continue
-        }
-
-        for (const criteria of alert.pageCriteria) {
-            const page = criteria.page
-            let pageCriteriaMet = false
-
-            if (_.isEmpty(criteria.content)) {
-                if (page.changes) pageCriteriaMet = true
-            } else {
-                const acceptanceArray = []
-
-                for (const c of criteria.content) {
-                    const pageContentValue = page.content[c.name]
-                    const criteriaMet = c.criteria ? conditionChecker[c.criteria](pageContentValue, c.value) : _.has(page.changes, c.name)
-                    acceptanceArray.push(criteriaMet)
-                }
-
-                const passed = (criteria.andOr === 'OR') ? acceptanceArray.some(v => v) : acceptanceArray.every(v => v)
-                if (passed) pageCriteriaMet = true
-            }
-
-            if (pageCriteriaMet) {
-                correctPages.push(page)
-                criteria.criteriaLastMet = new Date()
-            }
-        }  
-
-        alert.correctPages = correctPages
-
-        if (alert.pageCriteria.length === correctPages.length) {
-            if (alert.emailAddress) sendEmail(alert)
-            if (alert.phoneNumber) sendText(alert)
-            alert.lastAlerted = new Date()
-        }
-        
-        await Alert.findByIdAndUpdate(alert._id, alert)
+        const updatedAlert = await checkAlert(alert, true)
+        if (sendAlertNotifications && updatedAlert) await sendNotifications(updatedAlert)
     }
+
+    console.log('finished checking.')
 }
 
+async function checkAlert(alert, checkOnlyChanges = false) {
+    const correctPages = []
+
+    alert = await getProperlyInflatedAlert(alert)
+
+    const changesExist = alert.pageCriteria.filter(criteria => _.get(criteria,'page.changes')).length ? true : false
+
+    if (!changesExist && checkOnlyChanges) {
+        return
+    }
+
+    for (const criteria of alert.pageCriteria) {
+        const page = criteria.page
+        let pageCriteriaMet = false
+
+        if (_.isEmpty(criteria.content)) {
+            if (page.changes) pageCriteriaMet = true
+        } else {
+            const acceptanceArray = []
+
+            for (const c of criteria.content) {
+                const pageContentValue = page.content[c.name]
+                const criteriaMet = c.criteria ? conditionChecker[c.criteria](pageContentValue, c.value) : _.has(page.changes, c.name)
+                acceptanceArray.push(criteriaMet)
+            }
+
+            const passed = (criteria.andOr === 'OR') ? acceptanceArray.some(v => v) : acceptanceArray.every(v => v)
+            if (passed) pageCriteriaMet = true
+        }
+
+        if (pageCriteriaMet) {
+            correctPages.push(page)
+            criteria.criteriaLastMet = new Date()
+        }
+    }  
+
+    alert.correctPages = correctPages
+    await Alert.findByIdAndUpdate(alert._id, alert)
+
+    return alert
+}
+
+async function sendNotifications(alert) {
+    alert = await getProperlyInflatedAlert(alert)
+
+    if (alert.pageCriteria.length === alert.correctPages.length) {
+        if (alert.emailAddress) sendEmail(alert)
+        if (alert.phoneNumber) sendText(alert)
+        alert.lastAlerted = new Date()
+    }
+
+}
 
 function sendEmail(alert) {
     let contentStr = ''
@@ -113,5 +128,23 @@ function sendText(alert) {
     }
 }
 
+async function getProperlyInflatedAlert(alert) {
+    let correctAlert = alert
+    const criteriaPage = _.get(alert, 'pageCriteria[0].page', false)
+    const correctPage = _.get(alert, 'correctPages[0]', false)
+
+    if ((criteriaPage && !criteriaPage.url) || (correctPage && !correctPage.url)) {
+        console.log('populating')
+        correctAlert = await Alert.findOne({ _id: alert._id }).populate('pageCriteria.page').populate('correctPages')
+    }
+
+    return correctAlert
+}
+
 
 module.exports = sendNotifications
+module.exports = { 
+    checkAlerts, 
+    checkAlert, 
+    sendNotifications 
+}
