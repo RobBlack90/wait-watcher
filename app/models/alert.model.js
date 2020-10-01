@@ -17,6 +17,7 @@ const PageCriteriaSchema = new Schema({
 
 const AlertSchema = new Schema({
     name: { required: true, type: String },
+    isActive: { type: Boolean, default: true},
     emailAddress: { type: Object, required: true },
     phoneNumber: { type: Object },
     pageCriteria: [ PageCriteriaSchema ],

@@ -15,8 +15,8 @@ const conditionChecker = {
 
 async function checkAlerts(sendAlertNotifications = true) {
 
-    const alerts = await Alert.find().populate('pageCriteria.page').populate('correctPages')
-    console.log('Checking alerts...')
+    const alerts = await Alert.find({isActive: true}).populate('pageCriteria.page').populate('correctPages')
+    console.log('Checking active alerts...')
 
     for (const alert of alerts) {
         const updatedAlert = await checkAlert(alert, true)

@@ -15,6 +15,7 @@ module.exports = {
         return await notifications.checkAlert(newAlert)
     },
     async find(request) {
+        const query = request.query.hideInactive? {isActive: {$ne: false}} : {}
         const querySelect = {}
         const queryOptions = {}
 
@@ -29,7 +30,7 @@ module.exports = {
 
         if (request.query.sortBy) queryOptions.sort = request.query.sortBy
 
-        const alerts = await Alert.find({}, querySelect, queryOptions)
+        const alerts = await Alert.find(query, querySelect, queryOptions)
         return alerts
     },
     async show(request) {
